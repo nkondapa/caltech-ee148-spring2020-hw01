@@ -3,6 +3,7 @@ import numpy as np
 import json
 from PIL import Image
 
+
 def detect_red_light(I):
     '''
     This function takes a numpy array <I> and returns a list <bounding_boxes>.
@@ -24,26 +25,29 @@ def detect_red_light(I):
     '''
     BEGIN YOUR CODE
     '''
+
     
+
+
     '''
     As an example, here's code that generates between 1 and 5 random boxes
     of fixed size and returns the results in the proper format.
     '''
     
-    box_height = 8
-    box_width = 6
-    
-    num_boxes = np.random.randint(1,5) 
-    
-    for i in range(num_boxes):
-        (n_rows,n_cols,n_channels) = np.shape(I)
-        
-        tl_row = np.random.randint(n_rows - box_height)
-        tl_col = np.random.randint(n_cols - box_width)
-        br_row = tl_row + box_height
-        br_col = tl_col + box_width
-        
-        bounding_boxes.append([tl_row,tl_col,br_row,br_col]) 
+    # box_height = 8
+    # box_width = 6
+    #
+    # num_boxes = np.random.randint(1,5)
+    #
+    # for i in range(num_boxes):
+    #     (n_rows,n_cols,n_channels) = np.shape(I)
+    #
+    #     tl_row = np.random.randint(n_rows - box_height)
+    #     tl_col = np.random.randint(n_cols - box_width)
+    #     br_row = tl_row + box_height
+    #     br_col = tl_col + box_width
+    #
+    #     bounding_boxes.append([tl_row,tl_col,br_row,br_col])
     
     '''
     END YOUR CODE
@@ -79,5 +83,5 @@ for i in range(len(file_names)):
     preds[file_names[i]] = detect_red_light(I)
 
 # save preds (overwrites any previous predictions!)
-with open(os.path.join(preds_path,'preds.json'),'w') as f:
+with open(os.path.join(preds_path, 'preds.json'), 'w') as f:
     json.dump(preds,f)
