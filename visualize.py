@@ -43,11 +43,14 @@ def visualize_one_channel_image(image):
     plt.show()
 
 
-def visualize_all_images_with_bounding_boxes():
-    path = '../data/hw01_preds/preds.json'
-    image_base_path = '../data/RedLights2011_Medium'
+def visualize_all_images_with_bounding_boxes(image_base_path=None, prediction_path=None):
+    if prediction_path is None:
+        prediction_path = '../data/hw01_preds/preds.json'
 
-    with open(path, 'r') as f:
+    if image_base_path is None:
+        image_base_path = '../data/RedLights2011_Medium'
+
+    with open(prediction_path, 'r') as f:
         predictions_dict = json.load(f)
 
     for key in predictions_dict.keys():
@@ -56,6 +59,7 @@ def visualize_all_images_with_bounding_boxes():
         bounding_boxes = predictions_dict[key]
         print(image_path + ' | ' + str(len(bounding_boxes)))
         visualize_image_with_bounding_boxes(img, bounding_boxes)
+        show()
 
 
 def visualize_image_with_bounding_boxes(img, bounding_boxes):
@@ -64,7 +68,7 @@ def visualize_image_with_bounding_boxes(img, bounding_boxes):
 
     for bb in bounding_boxes:
         draw.rectangle(bb)
-    display_image(img)
+    return display_image(img)
 
 
 def display_image(img, mode='plt'):

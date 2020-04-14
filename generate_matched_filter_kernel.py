@@ -16,6 +16,20 @@ def search_for_kernel(img, kernel_save_path):
 
         events.append(event)
 
+    kernel_names = glob.glob('../data/kernels/*')
+    base_num = 0
+    for kname in kernel_names:
+
+        try:
+            val = int(kname.rstrip('.npy').split('=')[-1])
+            print(val)
+            if val > base_num:
+                base_num = val
+        except ValueError:
+            pass
+    base_num += 1
+    print(base_num)
+
     fig = plt.figure()
     plt.imshow(np.asarray(img))
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
@@ -26,6 +40,7 @@ def search_for_kernel(img, kernel_save_path):
     # im_mask = np.zeros(im_arr.shape, dtype=np.bool)
     box_size = 6
     boxes = []
+
     for i, event in enumerate(events):
         # WHY IS THIS SHIT ALWAYS INVERTED
         x = int(event.xdata)
@@ -36,12 +51,12 @@ def search_for_kernel(img, kernel_save_path):
         boxes.append(box)
         plt.imshow(box)
         plt.show()
-        save_kernels(box, kernel_save_path, i)
+        save_kernels(box, kernel_save_path, i + base_num)
 
-    np.stack(boxes, axis=3)
-    box_stack = np.stack(boxes, axis=3)
-    avg_box = np.mean(box_stack, axis=3)
-    save_kernels(avg_box, kernel_save_path, 'average')
+    # np.stack(boxes, axis=3)
+    # box_stack = np.stack(boxes, axis=3)
+    # avg_box = np.mean(box_stack, axis=3)
+    # save_kernels(avg_box, kernel_save_path, 'average')
 
     fig.canvas.mpl_disconnect(cid)
 
@@ -70,7 +85,6 @@ def inspect_image(img):
     # im_mask = np.zeros(im_arr.shape, dtype=np.bool)
     box_size = 6
     for i, event in enumerate(events):
-        # WHY IS THIS SHIT ALWAYS INVERTED
         x = int(event.xdata)
         y = int(event.ydata)
         print(x, y)
@@ -93,7 +107,7 @@ image_base_path = '../data/RedLights2011_Medium'
 
 image_paths = sorted(glob.glob(image_base_path + '/*'))
 
-image_path = image_paths[0]
+image_path = image_paths[9]
 img = utilities.load_image(image_path)
 img_arr = utilities.image_to_array(img)
 search_for_kernel(img, kernel_path)

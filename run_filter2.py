@@ -1,7 +1,7 @@
 import glob
 from utilities import *
 import matched_filter as mf
-import pixel_distance as pd
+import pixel_distance_algorithms as pd
 
 
 path = '../data/hw01_preds/preds.json'

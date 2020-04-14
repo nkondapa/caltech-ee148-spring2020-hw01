@@ -50,6 +50,14 @@ def file_modification_time(path):
     return os.path.getmtime(path)
 
 
+def generate_gaussian_kernel(s=3, sigma=1.0):
+    x, y = np.meshgrid(np.linspace(-1, 1, s), np.linspace(-1, 1, s))
+    d = np.sqrt(x * x + y * y)
+    mu = 0.0
+    g = np.exp(-((d - mu) ** 2 / (2.0 * sigma ** 2)))
+    return g
+
+
 def delete_directory_recursively(path):
 
     # Delete all contents of a directory using shutil.rmtree() and  handle exceptions
@@ -57,3 +65,12 @@ def delete_directory_recursively(path):
         shutil.rmtree(path)
     except:
         print('Error while deleting directory')
+
+
+def numpy_save(path, arr):
+    np.save(path, arr)
+
+
+def numpy_load(path):
+    return np.load(path)
+
