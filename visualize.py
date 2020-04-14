@@ -4,6 +4,45 @@ from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
 
 
+def visualize_convolved_image(convolved_image):
+    plt.figure()
+    plt.subplot(2, 2, 1)
+    plt.imshow(convolved_image)
+    plt.subplot(2, 2, 2)
+    plt.imshow(convolved_image[:, :, 0])
+    plt.subplot(2, 2, 3)
+    plt.imshow(convolved_image[:, :, 1])
+    plt.subplot(2, 2, 4)
+    plt.imshow(convolved_image[:, :, 2])
+
+    plt.figure()
+    plt.subplot(3, 1, 1)
+    plt.imshow(np.product(convolved_image, axis=2))
+    plt.subplot(3, 1, 2)
+    plt.imshow(np.sum(convolved_image, axis=2))
+    plt.show()
+    print()
+
+
+def visualize_three_channel_image(image):
+    plt.figure()
+    plt.subplot(2, 2, 1)
+    plt.imshow(image)
+    plt.subplot(2, 2, 2)
+    plt.imshow(image[:, :, 0])
+    plt.subplot(2, 2, 3)
+    plt.imshow(image[:, :, 1])
+    plt.subplot(2, 2, 4)
+    plt.imshow(image[:, :, 2])
+    plt.show()
+
+
+def visualize_one_channel_image(image):
+    plt.figure()
+    plt.imshow(np.squeeze(image))
+    plt.show()
+
+
 def visualize_all_images_with_bounding_boxes():
     path = '../data/hw01_preds/preds.json'
     image_base_path = '../data/RedLights2011_Medium'
@@ -14,12 +53,18 @@ def visualize_all_images_with_bounding_boxes():
     for key in predictions_dict.keys():
         image_path = image_base_path + '/' + key
         img = Image.open(image_path, 'r')
-        draw = ImageDraw.Draw(img)
         bounding_boxes = predictions_dict[key]
         print(image_path + ' | ' + str(len(bounding_boxes)))
-        for bb in bounding_boxes:
-            draw.rectangle(bb)
-        display_image(img)
+        visualize_image_with_bounding_boxes(img, bounding_boxes)
+
+
+def visualize_image_with_bounding_boxes(img, bounding_boxes):
+
+    draw = ImageDraw.Draw(img)
+
+    for bb in bounding_boxes:
+        draw.rectangle(bb)
+    display_image(img)
 
 
 def display_image(img, mode='plt'):

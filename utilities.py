@@ -1,6 +1,24 @@
 import os
 import shutil
-import pickle as pkl
+import numpy as np
+from PIL import Image
+
+
+def load_image(img_path):
+    img = Image.open(img_path)
+    return img
+
+
+def image_to_array(img):
+    return np.asarray(img, dtype=np.float32) / 255
+
+
+def load_kernel(id, base_kernel_path):
+    path = base_kernel_path + '/kernel=' + str(id) + '.npy'
+    kernel = np.load(path)
+    kernel = np.array(kernel, dtype=np.float32) / 255
+
+    return kernel
 
 
 def check_if_file_exists(path):
@@ -32,20 +50,6 @@ def file_modification_time(path):
     return os.path.getmtime(path)
 
 
-def load_pickle_object(path):
-    if check_if_file_exists(path) and path[-3:] == 'pkl':
-        with open(path, 'rb') as f:
-            return pkl.load(f)
-    elif not check_if_file_exists(path):
-        raise FileNotFoundError('Failed to find file : ' + path)
-
-
-def dump_pickle_object(obj, path):
-
-    with open(path, 'wb') as f:
-        pkl.dump(obj, f)
-
-
 def delete_directory_recursively(path):
 
     # Delete all contents of a directory using shutil.rmtree() and  handle exceptions
@@ -53,11 +57,3 @@ def delete_directory_recursively(path):
         shutil.rmtree(path)
     except:
         print('Error while deleting directory')
-
-
-def write_str_to_text_file(save_path, save_name, output_str):
-
-    if '.txt' not in save_name:
-        save_name += '.txt'
-    with open(save_path.rstrip('/') + '/' + save_name, 'w') as f:
-        f.write(output_str)

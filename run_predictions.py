@@ -26,9 +26,19 @@ def detect_red_light(I):
     BEGIN YOUR CODE
     '''
 
-    
+    import utilities as u
+    import
+    base_kernel_path = '../data/kernels'
+    # save_path = '../data/'
+    kernel_ids = [0, 3]
+    kernels = []
+    for id in kernel_ids:
+        kernels.append(u.load_kernel(id, base_kernel_path))
 
+    kernel_stack = np.stack(kernels, axis=3)
+    img_arr = I
 
+    pixel_rgb_distance_map_multi_kernel
     '''
     As an example, here's code that generates between 1 and 5 random boxes
     of fixed size and returns the results in the proper format.
