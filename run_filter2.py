@@ -11,16 +11,15 @@ save_path = '../data/convolved_images/'
 
 image_paths = sorted(glob.glob(image_base_path + '/*'))
 
-kernel_id = 0
+kernel_id = 'average'
 image_path = image_paths[0]
 img = load_image(image_path)
 img_arr = image_to_array(img)
 
 kernel = load_kernel(kernel_id, base_kernel_path)
-img_arr = pd.pixel_rgb_distance_map(img_arr)
 
-run1d = 0
-run2d = 0
+run1d = 1
+run2d = 1
 run3d = 1
 
 if run1d:
