@@ -43,7 +43,7 @@ def visualize_one_channel_image(image):
     plt.show()
 
 
-def visualize_all_images_with_bounding_boxes(image_base_path=None, prediction_path=None):
+def visualize_all_images_with_bounding_boxes(image_base_path=None, prediction_path=None, save_path=None):
     if prediction_path is None:
         prediction_path = '../data/hw01_preds/preds.json'
 
@@ -58,8 +58,11 @@ def visualize_all_images_with_bounding_boxes(image_base_path=None, prediction_pa
         img = Image.open(image_path, 'r')
         bounding_boxes = predictions_dict[key]
         print(image_path + ' | ' + str(len(bounding_boxes)))
-        visualize_image_with_bounding_boxes(img, bounding_boxes)
-        show()
+        if save_path is None:
+            visualize_image_with_bounding_boxes(img, bounding_boxes)
+            show()
+        else:
+            save_image_with_bounding_boxes(img, bounding_boxes, save_path + key)
 
 
 def visualize_image_with_bounding_boxes(img, bounding_boxes):
@@ -69,6 +72,16 @@ def visualize_image_with_bounding_boxes(img, bounding_boxes):
     for bb in bounding_boxes:
         draw.rectangle(bb)
     return display_image(img)
+
+
+def save_image_with_bounding_boxes(img, bounding_boxes, save_path):
+
+    draw = ImageDraw.Draw(img)
+
+    for bb in bounding_boxes:
+        draw.rectangle(bb)
+
+    img.save(save_path)
 
 
 def display_image(img, mode='plt'):
@@ -81,6 +94,10 @@ def display_image(img, mode='plt'):
 
 def show():
     plt.show()
+
+
+def save(fig, path):
+    plt.savefig()
 
 
 def close(fig=None):

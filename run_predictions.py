@@ -31,12 +31,13 @@ def detect_red_light(I, name=''):
     BEGIN YOUR CODE
     '''
     print(name)
-    base_kernel_path = '../data/kernels'
-    pooled_scores_path = '../data/pooled_scores/'
-    smoothed_image_path = '../data/smoothed_images/'
-    u.create_nonexistent_folder(pooled_scores_path)
-    u.create_nonexistent_folder(smoothed_image_path)
-    # save_path = '../data/'
+    base_kernel_path = './kernels'
+    # pooled_scores_path = '../data/pooled_scores/'
+    # smoothed_image_path = '../data/smoothed_images/'
+    # u.create_nonexistent_folder(pooled_scores_path)
+    # u.create_nonexistent_folder(smoothed_image_path)
+    psp = None
+    sip = None
     kernel_ids = [6, 'average']
     kernels = []
     for id in kernel_ids:
@@ -50,14 +51,14 @@ def detect_red_light(I, name=''):
 
     st = time.time()
 
-    psp = pooled_scores_path + name.rstrip('.jpg') + '_pooled'
+    # psp = pooled_scores_path + name.rstrip('.jpg') + '_pooled'
     if not force_pool and u.check_if_file_exists(psp + '.npy'):
         print('Loading pixel matching...')
         sub_pooled_scores_stack = u.numpy_load(psp + '.npy')
     else:
         print('Running pixel matching...')
         sub_pooled_scores_stack = pda.pixel_rgb_distance_map_multi_kernel(img_arr, kernel_stack)
-        u.numpy_save(psp, sub_pooled_scores_stack)
+        # u.numpy_save(psp, sub_pooled_scores_stack)
 
     average_pool_per_kernel = np.mean(sub_pooled_scores_stack, axis=3)
     prod_img = np.product(average_pool_per_kernel, axis=2)
@@ -65,14 +66,14 @@ def detect_red_light(I, name=''):
     timg = postp.threshold_convolved_image(nimg, 0.93)
     gauss_kernel = u.generate_gaussian_kernel(s=5)
 
-    sip = smoothed_image_path + name.rstrip('.jpg') + '_smoothed'
+    # sip = smoothed_image_path + name.rstrip('.jpg') + '_smoothed'
     if not force_smooth and u.check_if_file_exists(sip + '.npy'):
         print('Loading smoothing...')
         simg = u.numpy_load(sip + '.npy')
     else:
         print('Running smoothing...')
         simg = mf.smooth(timg, gauss_kernel)
-        u.numpy_save(sip, simg)
+        # u.numpy_save(sip, simg)
 
     simg = simg / np.max(simg)
     fimg = postp.threshold_convolved_image(simg, np.mean(simg) + np.std(simg))
@@ -88,31 +89,31 @@ def detect_red_light(I, name=''):
         assert len(bounding_boxes[i]) == 4
     
     return bounding_boxes
-#
-# # set the path to the downloaded data:
-# data_path = '../data/RedLights2011_Medium'
-#
-# # set a path for saving predictions:
-# preds_path = '../data/hw01_preds'
-# os.makedirs(preds_path,exist_ok=True) # create directory if needed
-#
-# # get sorted list of files:
-# file_names = sorted(os.listdir(data_path))
-#
-# # remove any non-JPEG files:
-# file_names = [f for f in file_names if '.jpg' in f]
-#
-# preds = {}
-# for i in range(len(file_names)):
-#
-#     # read image using PIL:
-#     I = Image.open(os.path.join(data_path,file_names[i]))
-#
-#     # convert to numpy array:
-#     I = np.asarray(I)
-#
-#     preds[file_names[i]] = detect_red_light(I, file_names[i])
-#
-# # save preds (overwrites any previous predictions!)
-# with open(os.path.join(preds_path, 'preds.json'), 'w') as f:
-#     json.dump(preds, f)
+
+# set the path to the downloaded data:
+data_path = '../data/RedLights2011_Medium'
+
+# set a path for saving predictions:
+preds_path = '../data/hw01_preds'
+os.makedirs(preds_path,exist_ok=True) # create directory if needed
+
+# get sorted list of files:
+file_names = sorted(os.listdir(data_path))
+
+# remove any non-JPEG files:
+file_names = [f for f in file_names if '.jpg' in f]
+
+preds = {}
+for i in range(len(file_names)):
+
+    # read image using PIL:
+    I = Image.open(os.path.join(data_path,file_names[i]))
+
+    # convert to numpy array:
+    I = np.asarray(I)
+
+    preds[file_names[i]] = detect_red_light(I, file_names[i])
+
+# save preds (overwrites any previous predictions!)
+with open(os.path.join(preds_path, 'preds.json'), 'w') as f:
+    json.dump(preds, f)
