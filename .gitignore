@@ -7,3 +7,4 @@
 !*.py
 !*.ipynb
 !pip_requirements.txt
+!/kernels/*
